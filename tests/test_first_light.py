@@ -352,7 +352,9 @@ class RunFolderTests(unittest.TestCase):
             refused.append(True)
             return {}
 
-        with patch.object(fl, "run", side_effect=self.tools), patch.object(fl, "run_draw", side_effect=draw),                 redirect_stdout(io.StringIO()):
+        tools = patch.object(fl, "run", side_effect=self.tools)
+        draws = patch.object(fl, "run_draw", side_effect=draw)
+        with tools, draws, redirect_stdout(io.StringIO()):
             self.assertEqual(fl.main(["--game", str(self.tmp), "--work", str(self.work), "--no-fit",
                                       "--vs", "vertex", "--ps", "first", "--run"]), 0)
         self.assertEqual(refused, [True])
